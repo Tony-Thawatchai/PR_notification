@@ -1,11 +1,12 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-// import chatbotRoutes from './routes/chatbotRoutes.js';
+import prNotifyRoutes from './routes/prNotifyRoutes.js';
 import errorHandler from './middlewares/errorHandler.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 dotenv.config();
 
 
@@ -22,8 +23,20 @@ app.use(express.json());
 // Enable CORS for all routes
 app.use(cors());
 
-// // Use chatbot routes
-// app.use('/api', chatbotRoutes);
+// MongoDB connection
+// Connect MongoDB
+mongoose
+  .connect(process.env.MONGODB_URL)
+  .then(() => {
+    console.log("DB Connection is ready");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+
+// Use prNotify routes
+app.use('/', prNotifyRoutes);
 
 
 // Error handling middleware
