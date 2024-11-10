@@ -7,9 +7,9 @@ import { getContentController } from "./getContentController.js";
 import {
   checkAndStoreEeContent,
   checkAndStoreBcContent,
-  postMailingList,
-  getMailingList,
 } from "../controllers/storeInDBController.js";
+import { getMailingList, postMailingList } from "../controllers/mailingListController.js";
+
 import { sendEmail } from "../controllers/sendEmailController.js";
 
 export const runPrNotify = async (req, res) => {
@@ -23,30 +23,17 @@ export const runPrNotify = async (req, res) => {
   try {
     // get the content of the page
     let content = await getContentController(req.body);
-    // console.log("content", content);
-    // content = {
-    //   eeContent: {
-    //     drawNumber: '318',
-    //     date: new Date('2024-10-10T07:00:00.000Z'),
-    //     drawName: 'French language proficiency (Version 1)',
-    //     drawSize: '1,000',
-    //     drawCRS: '444'
-    //   },
-    //   bcContent: {
-    //     date: new Date('2024-10-03T07:00:00.000Z'),
-    //     tableContent: 'data'
-    //   }
-    // };
+
     // query in database to check if the date is already in the database
     // if not, store it in the database
-
-    const eeResponse = await checkAndStoreEeContent(content.eeContent);
-    const bcResponse = await checkAndStoreBcContent(content.bcContent);
+    const [eeResponse, bcResponse] = await Promise.all([
+      checkAndStoreEeContent(content.eeContent),
+      checkAndStoreBcContent(content.bcContent)
+    ]);
 
     console.log("eeResponse", eeResponse);
     console.log("bcResponse", bcResponse);
 
-    // postMailingList('tony.ts2022@gmail.com');
 
     // send an email to the userlist in the database
     if (
@@ -75,9 +62,3 @@ export const runPrNotify = async (req, res) => {
   }
 };
 
-
-// ! next :
-// 1. format email content, readable date, nice design
-// 2. revise code for deploy to serverless Lambda function
-// 3. deploy to AWS Lambda and trigger with CloudWatch
-// 4. test the Lambda function
