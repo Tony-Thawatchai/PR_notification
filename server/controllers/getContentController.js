@@ -11,31 +11,33 @@ export const getContentController = async (req, res) => {
   let bcUrl = "https://www.welcomebc.ca/immigrate-to-b-c/invitations-to-apply";
   let responseObject = {};
 
+  // Create an array to hold the promises
+  const promises = [];
+
   // if request is for Express Entry draw announcement
   if (req.ee) {
     let isJson = true;
 
     // make a fetch to the specific url of IRCC's website for Express Entry draw announcement
-    let jsonResponse = await fetchContentService(eeUrl, isJson);
+    const eePromise = fetchContentService(eeUrl, isJson).then((jsonResponse) => {
+      // Ensure responseObject.eeContent is initialized
+      if (!responseObject.eeContent) {
+        responseObject.eeContent = {};
+      }
 
-    // console.log("jsonResponse", jsonResponse);
+      if (jsonResponse !== null) {
+        responseObject.eeContent.drawNumber = jsonResponse.eeContent.drawNumber;
+        responseObject.eeContent.date = new Date(jsonResponse.eeContent.drawDate);
+        responseObject.eeContent.drawName = jsonResponse.eeContent.drawName;
+        responseObject.eeContent.drawSize = jsonResponse.eeContent.drawSize;
+        responseObject.eeContent.drawCRS = jsonResponse.eeContent.drawCRS;
+      } else {
+        responseObject.eeContent = null;
+      }
+    });
 
-    // Ensure responseObject.eeContent is initialized
-    if (!responseObject.eeContent) {
-      responseObject.eeContent = {};
-    }
-
-    if (jsonResponse !== null) {
-      responseObject.eeContent.drawNumber = jsonResponse.eeContent.drawNumber;
-      responseObject.eeContent.date = new Date( jsonResponse.eeContent.drawDate);
-      responseObject.eeContent.drawName = jsonResponse.eeContent.drawName;
-      responseObject.eeContent.drawSize = jsonResponse.eeContent.drawSize;
-      responseObject.eeContent.drawCRS = jsonResponse.eeContent.drawCRS;
-
-      //   console.log("responseObject", responseObject);
-    } else {
-      responseObject.eeContent = null;
-    }
+    // Add the promise to the array
+    promises.push(eePromise);
   }
 
   // if request is for BC PNP draw announcement
@@ -43,23 +45,26 @@ export const getContentController = async (req, res) => {
     let isJson = false;
 
     // make a fetch to the specific url
-    let bcJsonResponse = await fetchContentService(bcUrl, isJson);
-    // console.log("bcJsonResponse", bcJsonResponse);
+    const bcPromise = fetchContentService(bcUrl, isJson).then((bcJsonResponse) => {
+      // Ensure responseObject.bcContent is initialized
+      if (!responseObject.bcContent) {
+        responseObject.bcContent = {};
+      }
 
-    // Ensure responseObject.eeContent is initialized
-    if (!responseObject.bcContent) {
-      responseObject.bcContent = {};
-    }
+      if (bcJsonResponse !== null) {
+        responseObject.bcContent.date = bcJsonResponse.bcContent.date;
+        responseObject.bcContent.tableContent = bcJsonResponse.bcContent.tableContent;
+      } else {
+        responseObject.bcContent = null;
+      }
+    });
 
-    if (bcJsonResponse !== null) {
-      responseObject.bcContent.date = bcJsonResponse.bcContent.date;
-      
-      responseObject.bcContent.tableContent =
-        bcJsonResponse.bcContent.tableContent;
-    } else {
-      responseObject.bcContent = null;
-    }
+    // Add the promise to the array
+    promises.push(bcPromise);
   }
+
+  // Wait for all promises to complete
+  await Promise.all(promises);
 
   return responseObject;
 };

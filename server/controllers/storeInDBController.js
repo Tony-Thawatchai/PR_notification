@@ -3,6 +3,7 @@ import EeContent from "../models/eeContent.js";
 import BcContent from "../models/bcContent.js";
 import MailingList from "../models/mailingList.js";
 
+
 export const checkAndStoreEeContent = async (eeContent) => {
   try {
     const { date } = eeContent;
@@ -16,11 +17,13 @@ export const checkAndStoreEeContent = async (eeContent) => {
     } else {
       // Store the new content in the database
       const newContent = new EeContent(eeContent);
-      await newContent.save();
-      console.log("New EE content stored in the database.");
+      const savePromise = newContent.save();
+      const deletePromise = deleteOldestCollectionIfMoreThanLimit(EeContent, 3);
 
-      // Delete the oldest record if the collection exceeds the limit
-      await deleteOldestCollectionIfMoreThanLimit(EeContent, 3);
+      // Run both operations concurrently
+      await Promise.all([savePromise, deletePromise]);
+
+      console.log("New EE content stored in the database and oldest record deleted if limit exceeded.");
 
       return { message: "EE Content stored successfully", isSuccess: true };
     }
@@ -43,11 +46,13 @@ export const checkAndStoreBcContent = async (bcContent) => {
     } else {
       // Store the new content in the database
       const newContent = new BcContent(bcContent);
-      await newContent.save();
-      console.log("New BC content stored in the database.");
+      const savePromise = newContent.save();
+      const deletePromise = deleteOldestCollectionIfMoreThanLimit(BcContent, 3);
 
-      // Delete the oldest record if the collection exceeds the limit
-      await deleteOldestCollectionIfMoreThanLimit(BcContent, 3);
+      // Run both operations concurrently
+      await Promise.all([savePromise, deletePromise]);
+
+      console.log("New BC content stored in the database and oldest record deleted if limit exceeded.");
 
       return { message: "BC Content stored successfully", isSuccess: true };
     }
