@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+      {
+        "source": "/prnotify/:path*",
+        "destination": "/:path*"
+      }
+    ]
+  }
