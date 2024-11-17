@@ -11,9 +11,6 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        // canadaRed: "#BE3D2F"
-        // canadaRed: "#C5392B"
-        // canadaRed: "hsl(5, 64%, 47%)"
         canadaRed: {
           DEFAULT: "hsl(5, 64%, 47%)", // Light mode color
           dark: "hsl(5, 64%, 55%)", // Dark mode color

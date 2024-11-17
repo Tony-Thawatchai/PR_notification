@@ -65,6 +65,9 @@ export const sendEmail = async (emailList, eeResponse, bcResponse, content) => {
   }
 
   try {
+    console.log("process.env.SENDGRID_API_KEY",process.env.SENDGRID_API_KEY);
+    console.log("process.env.EMAIL_USER",process.env.EMAIL_USER);
+    console.log("emailList",emailList);
     const msg = {
       to: emailList,
       from: process.env.EMAIL_USER,

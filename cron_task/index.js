@@ -39,8 +39,12 @@ export const handler = async (event) => {
     console.log("bcResponse", bcResponse);
 
     // Send an email to the userlist in the database if new content is stored
-    if (eeResponse.message === 'EE Content stored successfully' || bcResponse.message === 'BC Content stored successfully') {
+    if (eeResponse.isSuccess || bcResponse.isSuccess) {
       const emailList = await getMailingList();
+
+      // test email
+      // const emailList = ['au.thawatchai@gmail.com', 'tony.ts2022@gmail.com' ]
+
       const emailResponse = await sendEmail(emailList, eeResponse, bcResponse, content);
       console.log("emailResponse", emailResponse);
 
@@ -69,3 +73,6 @@ export const handler = async (event) => {
     };
   }
 };
+
+// Run the handler function
+handler();
