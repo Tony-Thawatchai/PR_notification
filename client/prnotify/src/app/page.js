@@ -81,6 +81,7 @@ export default function Home() {
             <a
               className="text-canadaRed dark:text-canadaRed-dark"
               href="https://www.tonydev.work/projects/3"
+              target="_blank"
             >
               tonydev.work
             </a>
