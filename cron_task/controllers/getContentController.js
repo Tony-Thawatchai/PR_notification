@@ -1,4 +1,5 @@
 import { fetchContentService } from "./helper/fetchContentService.js";
+import { eeUrl, bcUrl } from "../config.js";
 
 export const getContentController = async (req, res) => {
   // 1. check if the request is for Express Entry draw announcement or BC PNP draw announcement or both
@@ -6,9 +7,7 @@ export const getContentController = async (req, res) => {
   // 3. scrape the page for the date updated, content of the table
   // 4. return the scraped data {date updated, content of the table}
 
-  let eeUrl =
-    "https://www.canada.ca/content/dam/ircc/documents/json/ee_rounds_123_en.json";
-  let bcUrl = "https://www.welcomebc.ca/immigrate-to-b-c/invitations-to-apply";
+
   let responseObject = {};
 
   // Create an array to hold the promises

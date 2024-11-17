@@ -14,6 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
+// for testing in local, comment out when deploying
 // const PORT = process.env.PORT || 5050;
 
 // Middleware to parse JSON bodies
@@ -39,6 +40,7 @@ app.use("/email", emailRoutes);
 // Error handling middleware
 app.use(errorHandler);
 
+// for testing in local, comment out when deploying
 // app.listen(PORT, () => {
 //   console.log(`Server is running on port ${PORT}`);
 // });

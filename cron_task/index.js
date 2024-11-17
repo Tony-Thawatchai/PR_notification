@@ -3,6 +3,7 @@ import { checkAndStoreEeContent, checkAndStoreBcContent } from './controllers/st
 import { getMailingList, postMailingList } from "./controllers/mailingListController.js";
 import { sendEmail } from './controllers/sendEmailController.js';
 import {getContentController} from './controllers/getContentController.js';
+import { programToFetch } from './config.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -19,14 +20,9 @@ mongoose
 
 export const handler = async (event) => {
   try {
-    // Mock request body
-    const mockReq = {
-      ee: true,
-      bc: true,
-    };
 
     // Get the content of the page
-    let content = await getContentController(mockReq);
+    let content = await getContentController(programToFetch);
 
     // Query in database to check if the date is already in the database
     // If not, store it in the database
@@ -74,5 +70,5 @@ export const handler = async (event) => {
   }
 };
 
-// Run the handler function
-handler();
+// Run the handler function in the local environment to test, comment out when deploying
+// handler();

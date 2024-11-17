@@ -14,7 +14,8 @@ function EmailForm({ ctaText, action }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}> 
+    <form onSubmit={handleSubmit} className="p-4 bg-custom-gradient"> 
+
       <div>
         <label htmlFor="email" className="sr-only">
           Email
@@ -31,7 +32,7 @@ function EmailForm({ ctaText, action }) {
 
       <button
         type="submit"
-        className="bg-canadaRed dark:bg-canadaRed-dark mt-4 px-4 py-2 rounded-[4rem] min-w-32"
+        className="bg-canadaRed dark:bg-canadaRed-dark text-[#ededed] mt-4 px-4 py-2 rounded-[4rem] min-w-32"
       >
         {ctaText}
       </button>
