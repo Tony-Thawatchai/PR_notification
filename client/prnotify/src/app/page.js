@@ -80,7 +80,7 @@ export default function Home() {
             Read more about this project at{" "}
             <a
               className="text-canadaRed dark:text-canadaRed-dark"
-              href="https://tonydev.work/projects"
+              href="https://www.tonydev.work/projects/3"
             >
               tonydev.work
             </a>
