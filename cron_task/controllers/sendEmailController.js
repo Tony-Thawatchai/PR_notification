@@ -6,7 +6,6 @@ dotenv.config();
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const sendEmail = async (emailList, eeResponse, bcResponse, content) => {
-
   let subject = "";
   let text = "";
 
@@ -33,13 +32,18 @@ export const sendEmail = async (emailList, eeResponse, bcResponse, content) => {
   }
 
   try {
-    console.log("emailList",emailList);
+    console.log("emailList", emailList);
     const msg = {
-      to: emailList,
       from: process.env.EMAIL_USER,
       subject: subject,
       text: text,
       html: `<strong>${text}</strong>`,
+      personalizations: [
+        {
+          to: process.env.EMAIL_USER,
+          bcc: emailList,
+        },
+      ],
     };
 
     console.log("Sending email...", msg);
@@ -48,7 +52,7 @@ export const sendEmail = async (emailList, eeResponse, bcResponse, content) => {
 
     return { isSuccess: true, message: "Email sent successfully", info };
   } catch (error) {
-    console.error("Error sending email: ", error);
+    console.error("Error sending email: ", error, error.response.body.errors);
 
     throw new Error("Error sending email");
   }

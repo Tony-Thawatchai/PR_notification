@@ -1,7 +1,6 @@
 import { parseDocument } from "htmlparser2";
 import { findOne } from "domutils";
-import { default as serialize } from 'dom-serializer';
-
+import { default as serialize } from "dom-serializer";
 
 export const fetchContentService = async (url, isJson) => {
   if (!url) {
@@ -77,10 +76,24 @@ export const fetchContentService = async (url, isJson) => {
             if (!jsonResponse.bcContent) {
               jsonResponse.bcContent = {};
             }
-            // jsonResponse.bcContent.date = cells[0].children[0].data;
-            jsonResponse.bcContent.date = new Date(cells[0].children[0].data);
-            console.log("jsonResponse.bcContent.date", jsonResponse.bcContent.date);
-            
+            // Assuming cells[0].children[0].data contains the date string
+            const dateString = cells[0].children[0].data;
+            const parsedDate = new Date(dateString);
+
+            // Normalize the date to UTC
+            const utcDate = new Date(
+              Date.UTC(
+                parsedDate.getUTCFullYear(),
+                parsedDate.getUTCMonth(),
+                parsedDate.getUTCDate()
+              )
+            );
+
+            jsonResponse.bcContent.date = utcDate;
+            console.log(
+              "jsonResponse.bcContent.date",
+              jsonResponse.bcContent.date
+            );
           } else {
             console.log("No rows found in tbody.");
             jsonResponse.bcContent = null;
@@ -89,14 +102,11 @@ export const fetchContentService = async (url, isJson) => {
         processTable();
 
         // put HTML as string and put it in the response object
-        if(!jsonResponse.bcContent) {
+        if (!jsonResponse.bcContent) {
           jsonResponse.bcContent = {};
         }
 
         jsonResponse.bcContent.tableContent = serialize(resultsElement);
-
-
- 
       } else {
         console.log("table element not found or has no children.");
         jsonResponse.bcContent = null;
